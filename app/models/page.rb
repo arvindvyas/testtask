@@ -15,7 +15,7 @@ class Page < ActiveRecord::Base
   def generate_slug
     self.slug ||= name.parameterize
   end
-
+  #implementing the Luhn algorithm
   def find_checksum(card_number)
     number_arr = card_number.to_s.reverse.scan(/\d/).map { |x| x.to_i }
     number_arr = number_arr.each_with_index.map { |d, i|
@@ -25,16 +25,16 @@ class Page < ActiveRecord::Base
     sum = number_arr.inject(0) { |m, x| m + x }
     mod = 10 - sum % 10
     mod==10 ? 0 : mod
- end
+  end
  
-def check_card_number(card_number)
-  find_checksum(card_number) == 0
-end
- 
-def final_card_number(card_number)
-  card_number = card_number.to_s
-  checksum_digit = find_checksum(card_number).to_s
-  card_number.ljust(card_number.length+1, checksum_digit)
-end
+  def check_card_number(card_number)
+    find_checksum(card_number) == 0
+  end
+   
+  def final_card_number(card_number)
+    card_number = card_number.to_s
+    checksum_digit = find_checksum(card_number).to_s
+    card_number.ljust(card_number.length+1, checksum_digit)
+  end
 
 end
